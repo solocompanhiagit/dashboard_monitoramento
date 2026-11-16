@@ -136,9 +136,6 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
                   <span className="text-xs font-semibold uppercase tracking-widest text-emerald-400">
                     Laboratório Solo & Companhia
                   </span>
-                  <span className="hidden sm:inline-block text-[11px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/25 font-medium">
-                    CrescIT Precision BI
-                  </span>
                 </div>
                 <h1 className="text-base sm:text-lg font-bold tracking-tight">
                   Diagnóstico Nutricional & Portal do Cliente
