@@ -153,8 +153,8 @@ export const Tab2FoliarBalance: React.FC<Tab2FoliarBalanceProps> = ({
   }, [groupRecords, selectedElement, db, filters.cultura, filters.dae]);
 
   const cardClass = isDark
-    ? 'bg-[#111827]/80 border-[#1e293b] text-slate-100 backdrop-blur-md'
-    : 'bg-white border-slate-200 text-slate-900 shadow-sm';
+    ? 'bg-[#0e1726]/80 border-white/[0.07] text-slate-100'
+    : 'bg-white border-slate-200/90 text-slate-900 shadow-[0_1px_3px_rgba(15,23,42,0.04)]';
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">

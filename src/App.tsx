@@ -28,6 +28,7 @@ import {
 } from './utils/referenceEngine';
 import { HeaderBar } from './components/HeaderBar';
 import { ClientPortalModal } from './components/ClientPortalModal';
+import { CropPhenologyDiagram } from './components/CropPhenologyDiagram';
 import { Tab1OverviewBullet } from './components/Tab1OverviewBullet';
 import { Tab2FoliarBalance } from './components/Tab2FoliarBalance';
 import { Tab2RadarPhenology } from './components/Tab2RadarPhenology';
@@ -442,6 +443,16 @@ export const App: React.FC = () => {
     return [...set].sort((a, b) => getStageOrderScore(a) - getStageOrderScore(b));
   }, [recordsAfterAttribute, filters.tipoAnalise]);
 
+  const stageCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    recordsAfterAttribute.forEach((r) => {
+      if (r.dae && r.dae !== 'Não Inf.') {
+        counts[r.dae] = (counts[r.dae] || 0) + 1;
+      }
+    });
+    return counts;
+  }, [recordsAfterAttribute]);
+
   useEffect(() => {
     if (
       filters.dae !== 'TODOS' &&
@@ -714,7 +725,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Content Container */}
-      <main className="max-w-[1600px] mx-auto px-4 lg:px-6 py-5">
+      <main className="max-w-[1480px] mx-auto px-4 lg:px-8 py-6">
         {isExpansionModule ? (
           <ExpansionModuleEmptyState
             tipoAnalise={filters.tipoAnalise}
@@ -754,40 +765,37 @@ export const App: React.FC = () => {
             </div>
           </div>
         ) : (
-          <>
-            {/* 4-Tab Navigation Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-              <nav
-                aria-label="Abas analíticas"
-                className={`inline-flex flex-wrap items-center gap-1.5 p-1.5 rounded-2xl border ${
-                  isDark
-                    ? 'bg-[#111827]/90 border-[#1e293b]'
-                    : 'bg-white border-slate-200 shadow-sm'
-                }`}
-              >
+          <div className="space-y-6">
+            {/* Sleek Underline Tab Navigation Bar */}
+            <div
+              className={`flex flex-wrap items-center justify-between gap-3 border-b ${
+                isDark ? 'border-white/[0.07]' : 'border-slate-200'
+              }`}
+            >
+              <nav aria-label="Abas analíticas" className="flex items-center gap-1 overflow-x-auto -mb-px">
                 {[
                   {
                     id: 'OVERVIEW' as ActiveTab,
-                    label: '1. Visão Geral & Bullet Charts',
+                    label: 'Visão Geral',
                     icon: BarChart3,
                   },
                   {
                     id: 'RADAR_PHENOLOGY' as ActiveTab,
-                    label: tab2Label,
+                    label: tab2Label.replace(/^2\.\s*/, ''),
                     icon: Tab2Icon,
                   },
                   ...(hasIntegratedSoilTissue
                     ? [
                         {
                           id: 'INTEGRATED_SOIL' as ActiveTab,
-                          label: '3. Quadrantes Solo × Planta',
+                          label: 'Solo × Planta',
                           icon: Layers,
                         },
                       ]
                     : []),
                   {
                     id: 'SAMPLE_MATRIX' as ActiveTab,
-                    label: `${hasIntegratedSoilTissue ? '4' : '3'}. Matriz de Amostras (${filteredGroupRecords.length})`,
+                    label: `Matriz (${filteredGroupRecords.length})`,
                     icon: Table2,
                   },
                 ].map((tab) => {
@@ -797,43 +805,51 @@ export const App: React.FC = () => {
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold border-b-2 transition-all cursor-pointer whitespace-nowrap ${
                         active
-                          ? 'bg-emerald-500 text-slate-950 shadow-sm'
+                          ? 'border-emerald-500 text-emerald-500'
                           : isDark
-                          ? 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                          ? 'border-transparent text-slate-400 hover:text-slate-200 hover:border-white/15'
+                          : 'border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300'
                       }`}
                     >
-                      <Icon className="w-4 h-4" />
+                      <Icon className="w-3.5 h-3.5" />
                       <span>{tab.label}</span>
                     </button>
                   );
                 })}
               </nav>
 
-              {/* Quick Semantic Legend Pill */}
-              <div
-                className={`hidden xl:flex items-center gap-4 px-3.5 py-2 rounded-xl border text-xs ${
-                  isDark
-                    ? 'bg-[#111827]/70 border-[#1e293b] text-slate-300'
-                    : 'bg-white border-slate-200 text-slate-700'
-                }`}
-              >
+              {/* Minimal 3-Dot Semantic Legend */}
+              <div className="hidden lg:flex items-center gap-4 pb-2 text-[11px] text-slate-400">
                 <span className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#fb7185]" />
-                  <span>Abaixo da Ref. Mínima</span>
+                  <span className="w-2 h-2 rounded-full bg-[#fb7185]" />
+                  <span>Baixo</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#10b981]" />
-                  <span>Na Faixa Ideal (REF_MIN – REF_MAX)</span>
+                  <span className="w-2 h-2 rounded-full bg-[#10b981]" />
+                  <span>Ideal</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#22d3ee]" />
-                  <span>Acima da Ref. Máxima</span>
+                  <span className="w-2 h-2 rounded-full bg-[#22d3ee]" />
+                  <span>Alto</span>
                 </span>
               </div>
             </div>
+
+            {/* Interactive Crop Phenological Stages Diagram (Shown for Pecíolo & Folha) */}
+            {(filters.tipoAnalise === 'PECÍOLO' || filters.tipoAnalise === 'FOLHA') &&
+              (activeTab === 'OVERVIEW' || activeTab === 'RADAR_PHENOLOGY') && (
+                <CropPhenologyDiagram
+                  cultura={filters.cultura}
+                  selectedDae={filters.dae}
+                  availableDaes={daeOptions}
+                  stageCounts={stageCounts}
+                  onSelectDae={(dae) => handleUpdateFilter('dae', dae)}
+                  estagiosRef={db.dEstagios}
+                  isDark={isDark}
+                />
+              )}
 
             {/* Active Tab View */}
             {activeTab === 'OVERVIEW' && (
@@ -909,30 +925,29 @@ export const App: React.FC = () => {
                 isDark={isDark}
               />
             )}
-          </>
+          </div>
         )}
       </main>
 
-      {/* Footer */}
+      {/* Minimalist Footer */}
       <footer
-        className={`mt-10 border-t py-4 px-6 text-xs ${
+        className={`mt-12 border-t py-4 px-6 text-[11px] ${
           isDark
-            ? 'border-[#1e293b] bg-[#070d12] text-slate-500'
-            : 'border-slate-200 bg-white text-slate-500'
+            ? 'border-white/[0.06] bg-[#070d12] text-slate-500'
+            : 'border-slate-200/80 bg-white text-slate-400'
         }`}
       >
-        <div className="max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="max-w-[1480px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Activity className="w-3.5 h-3.5 text-emerald-500" />
             <span>
-              <strong>Laboratório Solo & Companhia</strong> (@soloecompanhia) • CrescIT Gestão de
-              Precisão • Contato: (62) 3261-4562
+              <strong>Laboratório Solo & Companhia</strong> (@soloecompanhia) • (62) 3261-4562
             </span>
           </div>
           <div className="tabular-nums">
             {activeClient
-              ? `Sessão Isolada: ${activeClient.nome} (${activeClient.totalLaudos} laudos)`
-              : `Visão Admin Global • ${db.etlStats.totalAnalises} análises processadas`}
+              ? `${activeClient.nome} • ${activeClient.totalLaudos} laudos`
+              : `Visão Global • ${db.etlStats.totalAnalises} análises`}
           </div>
         </div>
       </footer>

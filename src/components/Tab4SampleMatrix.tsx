@@ -129,78 +129,67 @@ export const Tab4SampleMatrix: React.FC<Tab4SampleMatrixProps> = ({
   };
 
   const cardClass = isDark
-    ? 'bg-[#111827]/80 border-[#1e293b] text-slate-100 backdrop-blur-md'
-    : 'bg-white border-slate-200 text-slate-900 shadow-sm';
+    ? 'bg-[#0e1726]/80 border-white/[0.07] text-slate-100'
+    : 'bg-white border-slate-200/90 text-slate-900 shadow-[0_1px_3px_rgba(15,23,42,0.04)]';
 
   return (
-    <div className={`p-5 rounded-2xl border space-y-4 ${cardClass}`}>
+    <div className={`p-5 sm:p-6 rounded-2xl border space-y-4 ${cardClass}`}>
       {/* Header & Instant Search */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 pb-3 border-b border-[#1e293b]/70">
+      <div
+        className={`flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 pb-4 border-b ${
+          isDark ? 'border-white/[0.06]' : 'border-slate-100'
+        }`}
+      >
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-            <Table2 className="w-5 h-5" />
+          <div className="w-8 h-8 rounded-lg bg-emerald-500/12 text-emerald-500 flex items-center justify-center">
+            <Table2 className="w-4 h-4" />
           </div>
           <div>
-            <h2 className="text-sm sm:text-base font-bold">
-              Matriz Interativa de Amostras ({filteredAndSorted.length} registros)
+            <h2 className="text-sm font-bold tracking-tight">
+              Matriz de Amostras ({filteredAndSorted.length})
             </h2>
             <p className="text-xs text-slate-400">
-              Clique em qualquer linha da matriz para selecionar a amostra e abrir o diagnóstico
-              completo na <strong>Aba 1 (Visão Geral & Bullet Charts)</strong>.
+              Clique em qualquer linha para abrir o diagnóstico completo da amostra.
             </p>
           </div>
         </div>
 
-        {/* Search + Legend */}
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Status Legend Pills */}
-          <div className="hidden sm:flex items-center gap-3 text-xs px-3 py-1.5 rounded-xl border border-[#1e293b] bg-[#070d12]/50">
-            <span className="flex items-center gap-1.5 text-slate-300">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#fb7185]" />
-              Abaixo do Mín.
-            </span>
-            <span className="flex items-center gap-1.5 text-slate-300">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#10b981]" />
-              Faixa Ideal
-            </span>
-            <span className="flex items-center gap-1.5 text-slate-300">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#22d3ee]" />
-              Acima do Máx.
-            </span>
-          </div>
-
-          <div className="relative flex-1 sm:w-72">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={
-                filters.tipoAnalise === 'SOLO'
-                  ? 'Buscar lote, textura, profundidade...'
-                  : filters.tipoAnalise === 'SOLUÇÃO'
-                  ? 'Buscar ponto, profundidade, cultura...'
-                  : 'Buscar amostra, variedade, propriedade, DAE...'
-              }
-              className={`w-full pl-9 pr-3 py-1.5 rounded-xl text-xs border outline-none transition ${
-                isDark
-                  ? 'bg-[#070d12] border-[#1e293b] text-slate-100 focus:border-emerald-500'
-                  : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-emerald-600'
-              }`}
-            />
-          </div>
+        {/* Search */}
+        <div className="relative flex-1 sm:max-w-xs">
+          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={
+              filters.tipoAnalise === 'SOLO'
+                ? 'Buscar lote, textura, profundidade...'
+                : filters.tipoAnalise === 'SOLUÇÃO'
+                ? 'Buscar ponto, profundidade, cultura...'
+                : 'Buscar amostra, variedade, DAE...'
+            }
+            className={`w-full pl-9 pr-3 py-1.5 rounded-lg text-xs border outline-none transition ${
+              isDark
+                ? 'bg-[#070d12]/80 border-white/[0.08] text-slate-100 focus:border-emerald-500/70'
+                : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-emerald-600'
+            }`}
+          />
         </div>
       </div>
 
       {/* Interactive Table */}
-      <div className="overflow-x-auto rounded-xl border border-[#1e293b]/80">
+      <div
+        className={`overflow-x-auto rounded-xl border ${
+          isDark ? 'border-white/[0.06]' : 'border-slate-200/80'
+        }`}
+      >
         <table className="w-full text-xs border-collapse">
           <thead>
             <tr
               className={
                 isDark
-                  ? 'bg-[#070d12] text-slate-300 border-b border-[#1e293b]'
-                  : 'bg-slate-100 text-slate-700 border-b border-slate-200'
+                  ? 'bg-[#070d12]/80 text-slate-400 border-b border-white/[0.06]'
+                  : 'bg-slate-50 text-slate-600 border-b border-slate-200'
               }
             >
               <th
@@ -281,7 +270,7 @@ export const Tab4SampleMatrix: React.FC<Tab4SampleMatrixProps> = ({
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-[#1e293b]/60 tabular-nums">
+          <tbody className={`divide-y tabular-nums ${isDark ? 'divide-white/[0.05]' : 'divide-slate-100'}`}>
             {visibleRows.map((row) => {
               const isSelected = filters.amostraMode === row.sampleKey;
               return (
@@ -290,26 +279,32 @@ export const Tab4SampleMatrix: React.FC<Tab4SampleMatrixProps> = ({
                   onClick={() => onInspectSample(row.sampleKey)}
                   className={`cursor-pointer transition-colors ${
                     isSelected
-                      ? 'bg-emerald-500/15 hover:bg-emerald-500/20'
+                      ? 'bg-emerald-500/12 hover:bg-emerald-500/18'
                       : isDark
-                      ? 'hover:bg-slate-800/60'
-                      : 'hover:bg-emerald-50/60'
+                      ? 'hover:bg-white/[0.03]'
+                      : 'hover:bg-slate-50'
                   }`}
                 >
-                  <td className="py-2.5 px-3 font-bold whitespace-nowrap">
+                  <td className="py-3 px-3 font-semibold whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <span className="text-emerald-400">#{row.idAnalise}</span>
+                      <span className="text-emerald-500 font-bold">#{row.idAnalise}</span>
                       <span>{row.amostra}</span>
                     </div>
                   </td>
-                  <td className="py-2.5 px-3 text-slate-300 max-w-[180px] truncate">
+                  <td className={`py-3 px-3 max-w-[180px] truncate ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
                     {row.propriedade}
                   </td>
-                  <td className="py-2.5 px-3 text-slate-400 max-w-[160px] truncate">
+                  <td className="py-3 px-3 text-slate-400 max-w-[160px] truncate">
                     {row.variedade}
                   </td>
-                  <td className="py-2.5 px-2.5 text-center">
-                    <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-200 text-[11px] font-semibold">
+                  <td className="py-3 px-2.5 text-center">
+                    <span
+                      className={`px-2 py-0.5 rounded-md text-[11px] font-semibold ${
+                        isDark
+                          ? 'bg-white/[0.06] text-slate-200'
+                          : 'bg-slate-100 text-slate-700'
+                      }`}
+                    >
                       {row.dae}
                     </span>
                   </td>
